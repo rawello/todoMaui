@@ -1,12 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using TodoApp.Data;
-using TodoApp.Models;
+﻿using MauiApp2.Data;
+using MauiApp2.Models;
+using MauiApp2.Views;
 
-namespace TodoApp.Views
+namespace MauiApp2.Views
 {
     [XamlCompilation(XamlCompilationOptions.Compile)]
     public partial class TodoListPage : ContentPage
@@ -20,7 +16,7 @@ namespace TodoApp.Views
         {
             base.OnAppearing();
             TodoItemDatabase database = await TodoItemDatabase.Instance;
-            listView.ItemsSource = await database.GetItemsAsync();
+            collectionView.ItemsSource = await database.GetItemsAsync();
         }
 
         async void OnItemAdded(object sender, EventArgs e)
@@ -39,6 +35,43 @@ namespace TodoApp.Views
                 {
                     BindingContext = e.SelectedItem as TodoItem
                 });
+            }
+        }
+        
+        async void SwipeView_SwipeEnded(object sender, SwipeEndedEventArgs e)
+        {
+            if (e.SwipeDirection == SwipeDirection.Left)
+            {
+                var selectedItem = (sender as SwipeView).BindingContext as TodoItem;
+                if (selectedItem != null)
+                {
+                    Navigation.PushAsync(new TodoItemPage
+                    {
+                        BindingContext = selectedItem
+                    });
+                }
+            }
+            else
+            {
+                var selectedItem = (sender as SwipeView).BindingContext as TodoItem;
+                if (selectedItem != null)
+                {
+                    TodoItemDatabase database = await TodoItemDatabase.Instance;
+                    selectedItem.Done = !selectedItem.Done;
+                    await database.SaveItemAsync(selectedItem);
+                    collectionView.ItemsSource = await database.GetItemsAsync();
+                }
+            }
+        }
+        
+        async void LogoutBtn(object sender, EventArgs e)
+        {
+            bool answer = await DisplayAlert("Logout", "Are you sure you want to logout?", "Yes", "No");
+
+            if (answer)
+            {
+                //такие дела
+                Navigation.PushAsync(new LoginPage());
             }
         }
     }

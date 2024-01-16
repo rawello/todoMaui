@@ -1,6 +1,6 @@
 ﻿using System.Runtime.CompilerServices;
 
-namespace TodoApp
+namespace MauiApp2
 {
     public class AsyncLazy<T>
     {

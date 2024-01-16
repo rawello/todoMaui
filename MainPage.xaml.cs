@@ -1,4 +1,4 @@
-﻿namespace TodoApp;
+﻿namespace MauiApp2;
 
 public partial class MainPage : ContentPage
 {

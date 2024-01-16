@@ -1,7 +1,7 @@
-﻿using TodoApp.Data;
-using TodoApp.Models;
+﻿using MauiApp2.Data;
+using MauiApp2.Models;
 
-namespace TodoApp.Views
+namespace MauiApp2.Views
 {
     [XamlCompilation(XamlCompilationOptions.Compile)]
     public partial class TodoItemPage : ContentPage
@@ -15,7 +15,15 @@ namespace TodoApp.Views
         {
             var todoItem = (TodoItem)BindingContext;
             TodoItemDatabase database = await TodoItemDatabase.Instance;
-            await database.SaveItemAsync(todoItem);
+            if (todoItem.Name == null || todoItem.Name.Replace(" ", "").Length <= 0)
+            {
+                //разрабы дауны, проверку на != null не завезли(она не работает в моих руках)
+            }
+            else
+            {
+                await database.SaveItemAsync(todoItem);
+            }
+
             await Navigation.PopAsync();
         }
 

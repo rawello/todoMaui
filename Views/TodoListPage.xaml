@@ -1,39 +1,81 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage
-    x:Class="TodoApp.Views.TodoListPage"
+    x:Class="MauiApp2.Views.TodoListPage"
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:swipe="clr-namespace:Microsoft.Maui.Controls.PlatformConfiguration.AndroidSpecific;assembly=Microsoft.Maui.Controls"
     Title="Todo">
     <ContentPage.ToolbarItems>
-        <ToolbarItem Clicked="OnItemAdded" Text="+">
-            <ToolbarItem.IconImageSource>
-                <OnPlatform x:TypeArguments="ImageSource">
-                    <On Platform="Android,UWP" Value="plus.png" />
-                </OnPlatform>
-            </ToolbarItem.IconImageSource>
+        <ToolbarItem Text="Log out" Clicked="LogoutBtn">
+            <!-- <ToolbarItem.IconImageSource> -->
+            <!--     <OnPlatform x:TypeArguments="ImageSource"> -->
+            <!--         <On Platform="Android,UWP" Value="plus.png" /> -->
+            <!--         <On Platform="iOS" Value="plus_ios.png" /> -->
+            <!--     </OnPlatform> -->
+            <!-- </ToolbarItem.IconImageSource> -->
         </ToolbarItem>
     </ContentPage.ToolbarItems>
-
-    <ListView
-        x:Name="listView"
-        Margin="20"
-        ItemSelected="OnListItemSelected">
-        <ListView.ItemTemplate>
-            <DataTemplate>
-                <ViewCell>
-                    <StackLayout
-                        Margin="20,0,0,0"
-                        HorizontalOptions="FillAndExpand"
-                        Orientation="Horizontal">
-                        <Label HorizontalOptions="StartAndExpand" VerticalOptions="Center" Text="{Binding Name}" />
-                        <Image
-                            HorizontalOptions="End"
-                            IsVisible="{Binding Done}"
-                            Source="check.png" />
-                    </StackLayout>
-                </ViewCell>
-            </DataTemplate>
-        </ListView.ItemTemplate>
-    </ListView>
-
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+        <CollectionView
+            x:Name="collectionView"
+            Margin="20"
+            ItemsSource="{Binding Items}">
+            <CollectionView.ItemTemplate>
+                <DataTemplate>
+                    <SwipeView swipe:SwipeView.SwipeTransitionMode="Drag"
+                               SwipeEnded="SwipeView_SwipeEnded"
+                               Threshold="100">
+                        <SwipeView.LeftItems>
+                            <SwipeItems
+                                Mode="Execute">
+                                <SwipeItem
+                                    x:Name="completeItem"
+                                    BackgroundColor="CornflowerBlue"
+                                    Text="State" />
+                            </SwipeItems>
+                        </SwipeView.LeftItems>
+                        <SwipeView.RightItems>
+                            <SwipeItems
+                                Mode="Execute">
+                                <SwipeItem
+                                    BackgroundColor="Blue"
+                                    Text="Change" />
+                            </SwipeItems>
+                        </SwipeView.RightItems>
+                        <StackLayout
+                            Margin="20,0,0,0"
+                            HorizontalOptions="FillAndExpand"
+                            Orientation="Horizontal">
+                            <Label 
+                                HorizontalOptions="StartAndExpand" 
+                                VerticalOptions="Center" 
+                                Text="{Binding Name}" 
+                                TextColor="BlueViolet"
+                                FontSize="16"
+                                Margin="5"
+                                Padding="5" />
+                            <Label
+                                HorizontalOptions="End"
+                                IsVisible="{Binding Done}"
+                                Text="+"
+                                TextColor="LightGreen"
+                                FontSize="24"
+                                Margin="5" />
+                        </StackLayout>
+                    </SwipeView>
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
+        </CollectionView>
+        <Button
+            Grid.Row="1"
+            Text="Add"
+            HorizontalOptions="End"
+            VerticalOptions="End"
+            Margin="20"
+            Clicked="OnItemAdded" />
+    </Grid>
 </ContentPage>
